@@ -31,6 +31,7 @@ public class HttpUtils {
 
     /**
      * Http post请求
+     * param: key=value&key=value&...
      * @param apiUrl
      * @param params
      * @return
