@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>PostMan</title>
+    <script th:src="@{/js/jquery-3.4.1.js}" type="text/javascript"></script>
+    <script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
+    <link th:href="@{/css/bootstrap.min.css}" type="text/css" rel="stylesheet"/>
+    <script>
+
+        function postMan() {
+            var uri = $("#uri").val();
+            var param = $("#param").val();
+            $.post("/postMan",{"uri":uri,"param":param},function (data) {
+                var resultObject = JSON.parse(data);
+
+                $("#srcResult").html(data);
+
+                var resultString = JSON.stringify(resultObject, null, 4);
+                var beauty = jsonBeauty(resultString);
+
+                $("#beautyResult").html(beauty);
+            })
+
+        }
+
+        function jsonBeauty(json) {
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+
+    </script>
+    <style>
+        .string {
+            color: green;
+        }
+
+        .number {
+            color: orangered;
+        }
+
+        .boolean {
+            color: blue;
+        }
+
+        .null {
+            color: magenta;
+        }
+
+        .key {
+            color: crimson;
+        }
+    </style>
+</head>
+<body>
+
+<div class="center-block" style="width: 75%;margin-top: 10px">
+    <form action="">
+        <div class="form-control" hidden="hidden">
+            <select>
+                <option value="POST" selected>POST</option>
+                <option value="GET">GET</option>
+            </select>
+        </div>
+        <div class="form-control">
+            <input type="text" class="form-control" id="uri" name="uri" placeholder="请输入URI"/>
+        </div>
+        <div class="form-control">
+            <textarea class="form-control" rows="3" id="param" name="param" placeholder="请输入PARAM"></textarea>
+        </div>
+        <div class="form-control">
+            <a class="btn btn-primary btn-lg btn-block" onclick="postMan()">SEND!</a>
+        </div>
+        <div class="form-control">
+            <pre id="srcResult">
+                <label></label>
+            </pre>
+        </div>
+        <div class="form-control">
+            <pre id="beautyResult">
+                <label></label>
+            </pre>
+        </div>
+    </form>
+
+</div>
+
+</body>
+</html>

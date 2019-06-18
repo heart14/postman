@@ -90,6 +90,8 @@ public class HttpUtils {
             }
         } catch (Exception e) {
             logger.error("HTTP发送POST请求出现异常! {}", e.getMessage());
+            String mmp = "{\"error\":\"请求目标服务器失败：" + e.getMessage() + "\"}";
+            return mmp;
         } finally {
             //第六步：关闭IO流
             try {
