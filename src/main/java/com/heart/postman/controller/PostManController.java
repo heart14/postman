@@ -21,22 +21,33 @@ public class PostManController {
 
     public static final Logger logger = LoggerFactory.getLogger(PostManController.class);
 
+    /**
+     * POSTMAN首页
+     *
+     * @return
+     */
     @RequestMapping(value = "/index")
     public ModelAndView postManPage() {
         return new ModelAndView("index");
     }
 
-    @RequestMapping(value = "/postMan",method = RequestMethod.POST)
+    /**
+     * 发送HTTP POST application/json请求
+     *
+     * @param uri
+     * @param param
+     * @return
+     */
+    @RequestMapping(value = "/postMan", method = RequestMethod.POST)
     @ResponseBody
     public String postMan(String uri, String param) {
         String result = HttpUtils.doPostJSON(uri, param);
-        logger.info("原始响应报文 :{}", result);
         String data = result.replace("\\", "{");
         data = data.replace("\"{", "{");
         data = data.replace("}\"", "}");
         data = data.replace("\"[", "[");
         data = data.replace("]\"", "]");
-        logger.info("转义后报文 :{}", data);
+        logger.info("RESPONSE :{}", data);
         return data;
     }
 }

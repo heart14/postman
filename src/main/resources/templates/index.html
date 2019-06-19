@@ -64,33 +64,41 @@
         .key {
             color: crimson;
         }
+        .back-top {
+            position: fixed;
+            right: 15px;
+            bottom: 15px;
+        }
     </style>
 </head>
 <body>
+<div id="page-top" style="height: 15px;">
 
-<div class="center-block" style="width: 75%;margin-top: 10px">
+</div>
+
+<div class="center-block" style="width: 75%;">
     <form action="">
-        <div class="form-control" hidden="hidden">
+        <div class="form-group" hidden="hidden">
             <select>
                 <option value="POST" selected>POST</option>
                 <option value="GET">GET</option>
             </select>
         </div>
-        <div class="form-control">
+        <div class="form-group">
             <input type="text" class="form-control" id="uri" name="uri" placeholder="请输入URI"/>
         </div>
-        <div class="form-control">
+        <div class="form-group">
             <textarea class="form-control" rows="3" id="param" name="param" placeholder="请输入PARAM"></textarea>
         </div>
-        <div class="form-control">
+        <div class="form-group">
             <a class="btn btn-primary btn-lg btn-block" onclick="postMan()">SEND!</a>
         </div>
-        <div class="form-control">
+        <div class="form-group">
             <pre id="srcResult">
                 <label></label>
             </pre>
         </div>
-        <div class="form-control">
+        <div class="form-group">
             <pre id="beautyResult">
                 <label></label>
             </pre>
@@ -99,5 +107,8 @@
 
 </div>
 
+<div class="back-top">
+    <a href="#page-top">返回顶部</a>
+</div>
 </body>
 </html>

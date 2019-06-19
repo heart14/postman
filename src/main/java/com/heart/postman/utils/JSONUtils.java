@@ -129,12 +129,14 @@ public class JSONUtils {
         return result.toString();
     }
 
-//    public static void main(String[] args) {
-//        String str = "{'age':23,'aihao':['pashan','movies'],'name':{'firstName':'zhang','lastName':'san','aihao':['pashan','movies','name':{'firstName':'zhang','lastName':'san','aihao':['pashan','movies']}]}}";
-//        String result = jsonParse(str);
-//
-//        System.out.println(result);
-//
-//    }
+/*
+    public static void main(String[] args) {
+        String str = "{'age':23,'aihao':['pashan','movies'],'name':{'firstName':'zhang','lastName':'san','aihao':['pashan','movies','name':{'firstName':'zhang','lastName':'san','aihao':['pashan','movies']}]}}";
+        String result = jsonParse(str);
+
+        System.out.println(result);
+
+    }
+*/
 
 }
