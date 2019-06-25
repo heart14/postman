@@ -1,6 +1,8 @@
 package com.heart.postman.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.heart.postman.utils.HttpUtils;
+import com.heart.postman.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -40,14 +42,55 @@ public class PostManController {
      */
     @RequestMapping(value = "/postMan", method = RequestMethod.POST)
     @ResponseBody
-    public String postMan(String uri, String param) {
-        String result = HttpUtils.doPostJSON(uri, param);
-        String data = result.replace("\\", "{");
-        data = data.replace("\"{", "{");
-        data = data.replace("}\"", "}");
-        data = data.replace("\"[", "[");
-        data = data.replace("]\"", "]");
-        logger.info("RESPONSE :{}", data);
+    public String postMan(String uri, String param, String method) {
+        logger.info("HTTP REQUEST URI:{}", uri);
+        logger.info("HTTP REQUEST PARAM:{}", param);
+        logger.info("HTTP REQUEST METHOD:{}", method);
+        JSONObject jsonObject = new JSONObject(1);
+        if (StringUtils.isEmpty(uri) || StringUtils.isEmpty(method)) {
+            jsonObject.put("error", "请正确输入参数！");
+            return jsonObject.toJSONString();
+        }
+//        else {
+//            if ("POST".equals(method)&&StringUtils.isEmpty(param)) {
+//                JSONObject jsonObject = new JSONObject(1);
+//                jsonObject.put("error", "请正确输入参数！");
+//                return jsonObject.toJSONString();
+//            }
+//        }
+        String data;
+        try {
+            String result = "";
+            switch (method) {
+                case "GET":
+                    String url = StringUtils.buildGetURL(uri, param);
+                    result = HttpUtils.doGet(url);
+                    break;
+                case "POST":
+                    logger.info("POST.");
+                    break;
+                case "POST(json)":
+                    result = HttpUtils.doPostJSON(uri, param);
+                    break;
+                default:
+                    break;
+            }
+            if (!StringUtils.isEmpty(result)) {
+                data = result.replace("\\", "{");
+                data = data.replace("\"{", "{");
+                data = data.replace("}\"", "}");
+                data = data.replace("\"[", "[");
+                data = data.replace("]\"", "]");
+                logger.info("RESPONSE :{}", data);
+            } else {
+                jsonObject.put("error", "Nothing to show.");
+                data = jsonObject.toJSONString();
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            jsonObject.put("error", e.getMessage());
+            data = jsonObject.toJSONString();
+        }
         return data;
     }
 }

@@ -11,7 +11,8 @@
         function postMan() {
             var uri = $("#uri").val();
             var param = $("#param").val();
-            $.post("/postMan",{"uri":uri,"param":param},function (data) {
+            var method = $("#httpMethod").val();
+            $.post("/postMan", {"uri": uri, "param": param, "method": method}, function (data) {
                 var resultObject = JSON.parse(data);
 
                 $("#srcResult").html(data);
@@ -64,10 +65,20 @@
         .key {
             color: crimson;
         }
+
         .back-top {
             position: fixed;
             right: 15px;
             bottom: 15px;
+        }
+
+        .col-sm-2 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .col-sm-10 {
+            padding-right: 0;
         }
     </style>
 </head>
@@ -78,14 +89,17 @@
 
 <div class="center-block" style="width: 75%;">
     <form action="">
-        <div class="form-group" hidden="hidden">
-            <select>
-                <option value="POST" selected>POST</option>
-                <option value="GET">GET</option>
-            </select>
-        </div>
         <div class="form-group">
-            <input type="text" class="form-control" id="uri" name="uri" placeholder="请输入URI"/>
+            <div class="form-group col-sm-2">
+                <select class="form-control" id="httpMethod">
+                    <option value="POST(json)" selected>POST(json)</option>
+                    <option value="POST">POST</option>
+                    <option value="GET">GET</option>
+                </select>
+            </div>
+            <div class="form-group col-sm-10">
+                <input type="text" class="form-control" id="uri" name="uri" placeholder="请输入URL"/>
+            </div>
         </div>
         <div class="form-group">
             <textarea class="form-control" rows="3" id="param" name="param" placeholder="请输入PARAM"></textarea>

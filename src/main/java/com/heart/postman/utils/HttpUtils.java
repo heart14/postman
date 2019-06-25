@@ -1,5 +1,6 @@
 package com.heart.postman.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,63 +26,51 @@ public class HttpUtils {
      */
     public static String doGet(String apiUrl) {
 
-        HttpURLConnection connection = null;
-        InputStream is = null;
-        BufferedReader br = null;
-        //返回结果字符串
-        String result = null;
+        logger.info("HTTP GET URL :{}", apiUrl);
+
+        StringBuffer result = new StringBuffer();
+        BufferedReader bufferedReader = null;
+
         try {
-            // 创建远程url连接对象
+            //第一步：获取URL
             URL url = new URL(apiUrl);
-            // 通过远程url连接对象打开一个连接，强转成httpURLConnection类
-            connection = (HttpURLConnection) url.openConnection();
-            // 设置连接方式：get
-            connection.setRequestMethod("GET");
-            // 设置连接主机服务器的超时时间：15000毫秒
-            connection.setConnectTimeout(15000);
-            // 设置读取远程返回的数据时间：60000毫秒
-            connection.setReadTimeout(60000);
-            // 发送请求
-            connection.connect();
-            // 通过connection连接，获取输入流
-            if (connection.getResponseCode() == 200) {
-                is = connection.getInputStream();
-                // 封装输入流is，并指定字符集
-                br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                // 存放数据
-                StringBuffer sbf = new StringBuffer();
-                String temp = null;
-                while ((temp = br.readLine()) != null) {
-                    sbf.append(temp);
-                    sbf.append("\r\n");
-                }
-                result = sbf.toString();
+            //第二步：使用URL获取URLConnection
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            //第三步：设置相应属性
+            httpURLConnection.setRequestMethod("GET");
+            httpURLConnection.setRequestProperty("Connection", "Keep-Alive");
+            httpURLConnection.setRequestProperty("Charset", "UTF-8");
+            httpURLConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36");
+            httpURLConnection.setConnectTimeout(30000);
+            httpURLConnection.setReadTimeout(60000);
+            //第四步：获取响应报文
+            bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), "UTF-8"));
+            String line = "";
+            while ((line = bufferedReader.readLine()) != null) {
+                result.append(line);
             }
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
+            JSONObject jsonObject = new JSONObject(1);
+            jsonObject.put("error", e.getMessage());
+            return jsonObject.toJSONString();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
+            JSONObject jsonObject = new JSONObject(1);
+            jsonObject.put("error", e.getMessage());
+            return jsonObject.toJSONString();
         } finally {
             // 关闭资源
-            if (null != br) {
+            if (null != bufferedReader) {
                 try {
-                    br.close();
+                    bufferedReader.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            if (null != is) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // 关闭远程连接
-            connection.disconnect();
         }
-        return result;
+        logger.info("HTTP POST JSON RESPONSE :{}", result);
+        return result.toString();
     }
 
     /**
@@ -93,6 +82,7 @@ public class HttpUtils {
      * @param params
      * @return
      */
+    @Deprecated
     public static String doPost(String apiUrl, String params) {
 
         HttpURLConnection connection = null;
@@ -106,8 +96,8 @@ public class HttpUtils {
             connection = (HttpURLConnection) url.openConnection();
             // 设置连接请求方式
             connection.setRequestMethod("POST");
-            // 设置连接主机服务器超时时间：15000毫秒
-            connection.setConnectTimeout(15000);
+            // 设置连接主机服务器超时时间：30000毫秒
+            connection.setConnectTimeout(30000);
             // 设置读取主机服务器返回数据超时时间：60000毫秒
             connection.setReadTimeout(60000);
 
@@ -138,6 +128,7 @@ public class HttpUtils {
                     sbf.append("\r\n");
                 }
                 result = sbf.toString();
+                logger.info("HTTP POST JSON RESPONSE :{}", result);
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
