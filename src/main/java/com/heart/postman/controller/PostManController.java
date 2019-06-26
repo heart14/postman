@@ -70,7 +70,7 @@ public class PostManController {
                 case "POST":
                     logger.info("POST.");
                     break;
-                case "POST(json)":
+                case "POST(JSON)":
                     result = HttpUtils.doPostJSON(uri, param);
                     break;
                 default:
