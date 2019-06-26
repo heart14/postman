@@ -1,5 +1,6 @@
 package com.heart.postman.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.heart.postman.utils.HttpUtils;
 import com.heart.postman.utils.StringUtils;
@@ -76,11 +77,14 @@ public class PostManController {
                     break;
             }
             if (!StringUtils.isEmpty(result)) {
-                data = result.replace("\\", "{");
-                data = data.replace("\"{", "{");
-                data = data.replace("}\"", "}");
-                data = data.replace("\"[", "[");
-                data = data.replace("]\"", "]");
+                try {
+                    JSONObject.parse(result);
+                    JSONArray.parse(result);
+                    data = result.replace("\\", "{").replace("\"{", "{").replace("}\"", "}").replace("\"[", "[").replace("]\"", "]");
+                } catch (Exception e) {
+                    logger.info("POSTMAN :响应数据非JSON格式!");
+                    data = result;
+                }
                 logger.info("RESPONSE :{}", data);
             } else {
                 jsonObject.put("error", "Nothing to show.");

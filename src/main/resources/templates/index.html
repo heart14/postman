@@ -13,14 +13,20 @@
             var param = $("#param").val();
             var method = $("#httpMethod").val();
             $.post("/postMan", {"uri": uri, "param": param, "method": method}, function (data) {
-                var resultObject = JSON.parse(data);
+                var resultObject;
 
+                try {
+                    resultObject = JSON.parse(data);
+
+                    var resultString = JSON.stringify(resultObject, null, 4);
+                    var beauty = jsonBeauty(resultString);
+
+                    $("#beautyResult").html(beauty);
+                } catch (e) {
+                    console.log("响应报文非json格式!");
+                    $("#beautyResult").html(data);
+                }
                 $("#srcResult").html(data);
-
-                var resultString = JSON.stringify(resultObject, null, 4);
-                var beauty = jsonBeauty(resultString);
-
-                $("#beautyResult").html(beauty);
             })
 
         }
