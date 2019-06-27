@@ -1,0 +1,6 @@
+HTTP GET
+HTTP POST Content-Type:application/x-www-form-urlencoded
+    所请求的接口要用@RequestParam注解标注参数名
+HTTP POST Content-Type:application/json
+    所请求的接口可以使用@RequestBody注解实体类，来接收参数，key/value会对应绑定到同名属性上
+    也可以使用Map<String,Object> map来接收参数,key作为map元素的key，value作为map元素的value

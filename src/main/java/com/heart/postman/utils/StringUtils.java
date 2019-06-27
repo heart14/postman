@@ -1,6 +1,7 @@
 package com.heart.postman.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.heart.postman.common.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,26 +30,32 @@ public class StringUtils {
     }
 
     /**
-     * HTTP GET方法时将参数组装到URL
+     * 将json格式参数组装成key=value&key=value...形式
      *
      * @param param
      * @return
      */
-    public static String buildGetURL(String uri, String param) {
+    public static String buildParam(String param) throws Exception {
 
-        StringBuilder url = new StringBuilder(uri);
-        if (isEmpty(param)) {
-            return url.toString();
+        StringBuilder buildParam = new StringBuilder();
+        if (StringUtils.isEmpty(param)) {
+            return Constants.EMPTY_STRING;
         }
-        JSONObject jsonObject = JSONObject.parseObject(param);
-        for (Map.Entry<String, Object> stringObjectEntry : jsonObject.entrySet()) {
-            String key = stringObjectEntry.getKey();
-            Object value = stringObjectEntry.getValue();
-            url.append("&");
-            url.append(key);
-            url.append("=");
-            url.append(value == null ? "" : value.toString());
+
+        try {
+            JSONObject jsonObject = JSONObject.parseObject(param);
+            for (Map.Entry<String, Object> stringObjectEntry : jsonObject.entrySet()) {
+                String key = stringObjectEntry.getKey();
+                Object value = stringObjectEntry.getValue();
+                buildParam.append("&");
+                buildParam.append(key);
+                buildParam.append("=");
+                buildParam.append(value == null ? "" : value.toString());
+            }
+        } catch (Exception e) {
+            logger.error("解析参数异常 :{}", e.getMessage());
+            throw new Exception("JSON解析异常 :参数非JSON格式!");
         }
-        return url.toString().replaceFirst("&", "?");
+        return buildParam.toString().replaceFirst("&", "");
     }
 }

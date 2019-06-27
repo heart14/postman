@@ -49,7 +49,7 @@ public class PostManController {
         logger.info("HTTP REQUEST METHOD:{}", method);
         JSONObject jsonObject = new JSONObject(1);
         if (StringUtils.isEmpty(uri) || StringUtils.isEmpty(method)) {
-            jsonObject.put("error", "请正确输入参数！");
+            jsonObject.put("error", "URL不能为空！");
             return jsonObject.toJSONString();
         }
 //        else {
@@ -64,11 +64,10 @@ public class PostManController {
             String result = "";
             switch (method) {
                 case "GET":
-                    String url = StringUtils.buildGetURL(uri, param);
-                    result = HttpUtils.doGet(url);
+                    result = HttpUtils.doGet(uri, StringUtils.buildParam(param));
                     break;
                 case "POST":
-                    logger.info("POST.");
+                    result = HttpUtils.doPost(uri, StringUtils.buildParam(param));
                     break;
                 case "POST(JSON)":
                     result = HttpUtils.doPostJSON(uri, param);
