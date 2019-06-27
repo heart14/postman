@@ -43,12 +43,12 @@ public class StringUtils {
         JSONObject jsonObject = JSONObject.parseObject(param);
         for (Map.Entry<String, Object> stringObjectEntry : jsonObject.entrySet()) {
             String key = stringObjectEntry.getKey();
-            String value = (String) stringObjectEntry.getValue();
+            Object value = stringObjectEntry.getValue();
             url.append("&");
             url.append(key);
             url.append("=");
-            url.append(value);
+            url.append(value == null ? "" : value.toString());
         }
-        return url.toString().replace("&", "?");
+        return url.toString().replaceFirst("&", "?");
     }
 }
