@@ -52,13 +52,6 @@ public class PostManController {
             jsonObject.put("error", "URL不能为空！");
             return jsonObject.toJSONString();
         }
-//        else {
-//            if ("POST".equals(method)&&StringUtils.isEmpty(param)) {
-//                JSONObject jsonObject = new JSONObject(1);
-//                jsonObject.put("error", "请正确输入参数！");
-//                return jsonObject.toJSONString();
-//            }
-//        }
         String data;
         try {
             String result = "";
